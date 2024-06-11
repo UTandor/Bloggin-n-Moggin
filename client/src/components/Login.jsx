@@ -1,27 +1,38 @@
-import React, { useState } from "react";
+import { notify } from "../reducers/notificationReducer";
 import loginService from "../services/login";
+import { useDispatch } from "react-redux";
 
-const Login = ({ changeUser, notify }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+const Login = ({ changeUser }) => {
+  const dispatch = useDispatch();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    const username = e.target.username.value;
+    const password = e.target.password.value;
     try {
       const user = await loginService.login({
         username: username,
         password: password,
       });
       changeUser(user);
-      setUsername("");
-      setPassword("");
+      username = "";
+      password = "";
       localStorage.setItem("user", JSON.stringify(user));
-      notify({ message: "Logged user in successfully", variant: "success" });
+      dispatch(
+        notify({ message: "Logged user in successfully", variant: "success" })
+      );
     } catch (error) {
       if (error.response.status === 400) {
-        notify({ message: "Incorrect username or password", variant: "error" });
+        dispatch(
+          notify({
+            message: "Incorrect username or password",
+            variant: "error",
+          })
+        );
       } else {
-        notify({ message: "Internal server error", variant: "error" });
+        dispatch(
+          notify({ message: "Internal server error", variant: "error" })
+        );
       }
     }
   };
@@ -32,16 +43,14 @@ const Login = ({ changeUser, notify }) => {
       <input
         type="text"
         data-testid="username"
-        value={username}
         placeholder="username"
-        onChange={({ target }) => setUsername(target.value)}
+        name="username"
       />
       <input
         type="text"
-        value={password}
         data-testid="password"
         placeholder="password"
-        onChange={({ target }) => setPassword(target.value)}
+        password="password"
       />
       <button type="submit">Login</button>
     </form>

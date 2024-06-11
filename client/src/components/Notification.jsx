@@ -1,11 +1,14 @@
-const Notification = ({ message, variant }) => {
+import { useSelector } from "react-redux";
+
+const Notification = ({}) => {
+  const notification = useSelector((state) => state.notification);
   return (
     <div
       className={`notification ${
-        variant === "error" ? "error" : "success"
+        notification.variant === "error" ? "error" : "success"
       }`}
     >
-      {message}
+      {notification.message}
     </div>
   );
 };
