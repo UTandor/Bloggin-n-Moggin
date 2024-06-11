@@ -1,19 +1,21 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import BlogView from "./components/BlogView";
 import Login from "./components/Login";
 import Notification from "./components/Notification";
 import { useDispatch, useSelector } from "react-redux";
-import { removeNotification } from "./reducers/notificationReducer";
+import { notify, removeNotification } from "./reducers/notificationReducer";
+import { removeUser, setUser } from "./reducers/userReducer";
 
 const App = () => {
-  const [user, setUser] = useState(null);
   const notification = useSelector((state) => state.notification);
+  const user = useSelector((state) => state.user);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      dispatch(setUser(JSON.parse(savedUser)));
     }
   }, []);
 
@@ -29,7 +31,7 @@ const App = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    setUser(null);
+    dispatch(removeUser());
     dispatch(
       notify({
         message: "Logged user out successfully",
@@ -48,14 +50,14 @@ const App = () => {
       )}
       {user === null ? (
         <div>
-          <Login changeUser={setUser} />
+          <Login />
         </div>
       ) : (
         <>
           <h2>Blogs</h2>
           <button onClick={handleLogout}>logout</button>
 
-          <BlogView user={user} />
+          <BlogView />
         </>
       )}
     </div>

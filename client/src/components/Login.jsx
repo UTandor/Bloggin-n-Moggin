@@ -1,12 +1,14 @@
 import { notify } from "../reducers/notificationReducer";
+import { setUser } from "../reducers/userReducer";
 import loginService from "../services/login";
 import { useDispatch } from "react-redux";
 
-const Login = ({ changeUser }) => {
+const Login = () => {
   const dispatch = useDispatch();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    console.log(e.target.password.value)
     const username = e.target.username.value;
     const password = e.target.password.value;
     try {
@@ -14,7 +16,7 @@ const Login = ({ changeUser }) => {
         username: username,
         password: password,
       });
-      changeUser(user);
+      dispatch(setUser(user));
       username = "";
       password = "";
       localStorage.setItem("user", JSON.stringify(user));
@@ -50,7 +52,7 @@ const Login = ({ changeUser }) => {
         type="text"
         data-testid="password"
         placeholder="password"
-        password="password"
+        name="password"
       />
       <button type="submit">Login</button>
     </form>

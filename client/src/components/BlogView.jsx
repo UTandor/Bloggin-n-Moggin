@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import Blog from "./Blog";
 import BlogCreator from "./BlogCreator";
 import blogService from "../services/blogs";
-import { addBlog, setBlogs } from "../reducers/blogReducer";
+import { addBlog, removeBlog, setBlogs } from "../reducers/blogReducer";
 import { useSelector, useDispatch } from "react-redux";
 import { notify } from "../reducers/notificationReducer";
 
-const BlogView = ({ user }) => {
+const BlogView = () => {
   const [creatorVisible, setCreatorVisible] = useState(false);
   const blogs = useSelector((state) => state.blogs);
+  const user = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
 
@@ -61,7 +62,7 @@ const BlogView = ({ user }) => {
   const handleDelete = async (blog) => {
     if (window.confirm(`Remove blog "${blog.title}" by ${blog.author} `)) {
       await blogService.deleteBlog(blog.id);
-      getBlogs();
+      dispatch(removeBlog(blog.id));
     }
   };
 
