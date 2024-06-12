@@ -8,7 +8,7 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log(e.target.password.value)
+    console.log(e.target.password.value);
     const username = e.target.username.value;
     const password = e.target.password.value;
     try {
@@ -16,14 +16,16 @@ const Login = () => {
         username: username,
         password: password,
       });
+      console.log(user);
       dispatch(setUser(user));
-      username = "";
-      password = "";
       localStorage.setItem("user", JSON.stringify(user));
+      e.target.username.value = "";
+      e.target.password.value = "";
       dispatch(
         notify({ message: "Logged user in successfully", variant: "success" })
       );
     } catch (error) {
+      console.log(error);
       if (error.response.status === 400) {
         dispatch(
           notify({

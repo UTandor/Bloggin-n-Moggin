@@ -46,4 +46,9 @@ const deleteBlog = async (id) => {
   await axios.delete(`${baseBlogUrl}/${id}`, config);
 };
 
-export default { getAll, getUser, create, like, deleteBlog };
+const getUsers = async () => {
+  const response = await axios.get(baseUserUrl);
+  return response;
+};
+
+export default { getAll, getUser, create, like, deleteBlog, getUsers };

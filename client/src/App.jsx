@@ -1,10 +1,14 @@
 import { useEffect } from "react";
-import BlogView from "./components/BlogView";
-import Login from "./components/Login";
-import Notification from "./components/Notification";
+import { Routes, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { notify, removeNotification } from "./reducers/notificationReducer";
 import { removeUser, setUser } from "./reducers/userReducer";
+
+import BlogView from "./components/BlogView";
+import UserView from "./components/UserView";
+import Login from "./components/Login";
+import Notification from "./components/Notification";
+import UsersView from "./components/UsersView";
 
 const App = () => {
   const notification = useSelector((state) => state.notification);
@@ -57,7 +61,11 @@ const App = () => {
           <h2>Blogs</h2>
           <button onClick={handleLogout}>logout</button>
 
-          <BlogView />
+          <Routes>
+            <Route path="/" element={<BlogView />} />
+            <Route path="/users" element={<UsersView />} />
+            <Route path="/users/:id" element={<UserView />} />
+          </Routes>
         </>
       )}
     </div>
