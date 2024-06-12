@@ -6,8 +6,10 @@
   "scripts": {
     "client": "cd client && npm run dev",
     "server": "cd server && npm run dev",
-    "build": "cd server && rm -rf dist && cd ../client && npm run build && cp -r dist ../server"
-    },
+    "build": "cd server && rm -rf dist && cd ../client && npm run build && cp -r dist ../server",
+    "test:c": "cd tests && npm run test",
+    "test:s": "cd server && npm run test"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC"

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import blogService from "../services/blogs";
 
 const BlogCreator = ({ handleCreate }) => {
   const [blog, setBlog] = useState({ title: "", url: "" });

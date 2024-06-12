@@ -1,18 +1,25 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { notify, removeNotification } from "./reducers/notificationReducer";
+import { removeUser, setUser } from "./reducers/userReducer";
+
 import BlogView from "./components/BlogView";
+import UserView from "./components/UserView";
 import Login from "./components/Login";
 import Notification from "./components/Notification";
+import UsersView from "./components/UsersView";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
-  const [user, setUser] = useState(null);
-  const [notification, setNotification] = useState(null);
+  const notification = useSelector((state) => state.notification);
+  const user = useSelector((state) => state.user);
 
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      dispatch(setUser(JSON.parse(savedUser)));
     }
   }, []);
 
@@ -21,18 +28,20 @@ const App = () => {
       if (notification === null) {
         return;
       } else {
-        setNotification(null);
+        dispatch(removeNotification());
       }
     }, 2000);
   }, [notification]);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    setUser(null);
-    setNotification({
-      message: "Logged user out successfully",
-      variant: "success",
-    });
+    dispatch(removeUser());
+    dispatch(
+      notify({
+        message: "Logged user out successfully",
+        variant: "success",
+      })
+    );
   };
 
   return (
@@ -45,19 +54,18 @@ const App = () => {
       )}
       {user === null ? (
         <div>
-            <Login changeUser={setUser} notify={setNotification} />
+          <Login />
         </div>
       ) : (
         <>
           <h2>Blogs</h2>
           <button onClick={handleLogout}>logout</button>
 
-          <BlogView
-            changeBlogs={setBlogs}
-            blogs={blogs}
-            user={user}
-            notify={setNotification}
-          />
+          <Routes>
+            <Route path="/" element={<BlogView />} />
+            <Route path="/users" element={<UsersView />} />
+            <Route path="/users/:id" element={<UserView />} />
+          </Routes>
         </>
       )}
     </div>
